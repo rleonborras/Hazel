@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Event.h"
+
 #include <sstream>
 
 namespace Hazel {
@@ -16,7 +17,7 @@ namespace Hazel {
 		std::string ToString() const override
 		{
 			std::stringstream ss;
-			ss << "WindowsResizeEvent : " << m_Height, "," < m_Width;
+			ss << "WindowsResizeEvent : " << m_Height<< "," << m_Width;
 			return ss.str();
 		}
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)

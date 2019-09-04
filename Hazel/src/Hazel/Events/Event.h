@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Hazel/Core.h"
-
 #include <string>
 #include <functional>
+
 
 namespace Hazel {
 
@@ -36,7 +36,7 @@ namespace Hazel {
 
 	class HAZEL_API Event {
 
-		friend EventDispatcher;
+		friend class EventDispatcher;
 
 	public:
 
@@ -74,7 +74,7 @@ namespace Hazel {
 		Event& m_Event;
 	};
 
-	inline std::ostream& operator<< (std::ostream& os, const Event& e) {
+	inline std::ostream& operator<<(std::ostream& os, const Event& e) {
 		return os << e.ToString();
 	}
 }

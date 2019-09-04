@@ -9,3 +9,6 @@
 
 //-----Entry Point-------------
 #include "Hazel/EntryPoint.h"
+
+//-----Events------------
+#include "Hazel/Events/Event.h"

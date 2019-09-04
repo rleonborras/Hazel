@@ -12,4 +12,4 @@
 
 #define BIT(x) (1<<x)
 
-typedef unsigned int uint
+typedef unsigned int uint;
