@@ -9,8 +9,10 @@ namespace Hazel {
 	class HAZEL_API KeyEvent : public Event
 	{
 	public:
+
 		inline int GetKeyCode() const { return m_KeyCode; }
 
+		EVENT_CLASS_CATEGORY(EventCategoryKeyboard | EventCategoryInput)
 
 	protected:
 
@@ -33,6 +35,7 @@ namespace Hazel {
 			return ss.str();
 		}
 		//DECLARE EVENT CLASS TIME
+		EVENT_CLASS_TYPE(KeyPressed)
 
 	private:
 		int m_RepeatCount;
@@ -50,6 +53,7 @@ namespace Hazel {
 			return ss.str();
 		}
 		//DECLARE EVENT CLASS TIME
+		EVENT_CLASS_TYPE(KeyReleased)
 	};
 
 
