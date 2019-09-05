@@ -3,8 +3,8 @@
 //For use by Hazel applications
 
 #include "Hazel/Application.h"
-
-//---- Log System-----------------
+//
+////---- Log System-----------------
 #include "Hazel/Log.h"
 
 //-----Entry Point-------------
