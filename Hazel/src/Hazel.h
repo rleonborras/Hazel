@@ -3,7 +3,8 @@
 //For use by Hazel applications
 
 #include "Hazel/Application.h"
-//
+//------Layer System-----------
+#include "Hazel/Layer.h"
 ////---- Log System-----------------
 #include "Hazel/Log.h"
 
