@@ -70,10 +70,10 @@ namespace Hazel {
 
 	};
 
-	class HAZEL_API MouseButtonPresedEvent : public MouseButtonEvent
+	class HAZEL_API MouseButtonReleasedEvent : public MouseButtonEvent
 	{
 	public:
-		MouseButtonPresedEvent(int button) :MouseButtonEvent(button) {};
+		MouseButtonReleasedEvent(int button) :MouseButtonEvent(button) {};
 
 		std::string ToString() const override {
 			std::stringstream ss;
