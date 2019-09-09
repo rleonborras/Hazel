@@ -8,6 +8,9 @@
 ////---- Log System-----------------
 #include "Hazel/Log.h"
 
+//------ImGui Layer--------
+#include "Hazel/ImGui/ImGuiLayer.h"
+
 //-----Entry Point-------------
 #include "Hazel/EntryPoint.h"
 
