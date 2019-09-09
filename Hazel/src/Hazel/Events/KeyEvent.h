@@ -40,7 +40,7 @@ namespace Hazel {
 	
 	};
 
-	class HAZEL_API KeyReleasedEvent : public KeyEvent
+	class HAZEL_API KeyReleasedEvent : publ	ic KeyEvent
 	{
 	public:
 		KeyReleasedEvent(int keycode) : KeyEvent(keycode){}
