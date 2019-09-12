@@ -6,6 +6,7 @@
 #include "Hazel/Events/ApplicationEvent.h"
 
 
+
 namespace Hazel {
 
 	class HAZEL_API ImGuiLayer : public Layer 
@@ -17,7 +18,8 @@ namespace Hazel {
 		void OnUpdate();
 		void OnAttach();
 		void OnDetach();
-
+		void setDocking();
+		void UpdateDocking();
 		void OnEvent(Event& event);
 	private:
 		bool OnMouseButtonPressedEvent(MouseButtonPressedEvent& e);
@@ -30,6 +32,7 @@ namespace Hazel {
 		bool OnWindowResizeEvent(WindowResizeEvent& e);
 	private:
 		float m_Time = 0.0f;
+	
 	};
 
 
