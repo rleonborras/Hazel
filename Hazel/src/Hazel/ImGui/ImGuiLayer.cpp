@@ -172,20 +172,20 @@ namespace Hazel {
 		{	
 			static float f0 = 1.0f, f1 = 2.0f, f2 = 3.0f;
 			ImGui::AlignTextToFramePadding();
-			ImGui::Text("Position                    "); ImGui::SameLine();
-			ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(90); ImGui::DragFloat("##valueX", &f0, 0.1f); ImGui::SameLine();
-			ImGui::Text("Y"); ImGui::SameLine(); ImGui::SetNextItemWidth(90); ImGui::DragFloat("##valueY", &f1, 0.1f); ImGui::SameLine();
-			ImGui::Text("Z"); ImGui::SameLine(); ImGui::SetNextItemWidth(90); ImGui::DragFloat("##valueZ", &f2, 0.1f);
-			ImGui::Text("Rotation                   "); ImGui::SameLine();
-			ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(90); ImGui::DragFloat("##value1", &f0, 0.1f); ImGui::SameLine();
-			ImGui::Text("Y"); ImGui::SameLine(); ImGui::SetNextItemWidth(90); ImGui::DragFloat("##value2", &f1, 0.1f); ImGui::SameLine();
-			ImGui::Text("Z"); ImGui::SameLine(); ImGui::SetNextItemWidth(90); ImGui::DragFloat("##value3", &f2, 0.1f);
-			ImGui::Text("Scale                         "); ImGui::SameLine();
-			ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(90); ImGui::DragFloat("##value4", &f0, 0.1f); ImGui::SameLine();
-			ImGui::Text("Y"); ImGui::SameLine(); ImGui::SetNextItemWidth(90); ImGui::DragFloat("##value5", &f1, 0.1f); ImGui::SameLine();
-			ImGui::Text("Z"); ImGui::SameLine(); ImGui::SetNextItemWidth(90); ImGui::DragFloat("##value6", &f2, 0.1f);
-
+			ImGui::Text("Position               "); ImGui::SameLine();
+			ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(50); ImGui::DragFloat("##valueX", &f0, 0.1f); ImGui::SameLine();
+			ImGui::Text("Y"); ImGui::SameLine(); ImGui::SetNextItemWidth(50); ImGui::DragFloat("##valueY", &f1, 0.1f); ImGui::SameLine();
+			ImGui::Text("Z"); ImGui::SameLine(); ImGui::SetNextItemWidth(50); ImGui::DragFloat("##valueZ", &f2, 0.1f);
+			ImGui::Text("Rotation              "); ImGui::SameLine();
+			ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(50); ImGui::DragFloat("##value1", &f0, 0.1f); ImGui::SameLine();
+			ImGui::Text("Y"); ImGui::SameLine(); ImGui::SetNextItemWidth(50); ImGui::DragFloat("##value2", &f1, 0.1f); ImGui::SameLine();
+			ImGui::Text("Z"); ImGui::SameLine(); ImGui::SetNextItemWidth(50); ImGui::DragFloat("##value3", &f2, 0.1f);
+			ImGui::Text("Scale                    "); ImGui::SameLine();
+			ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(50); ImGui::DragFloat("##value4", &f0, 0.1f); ImGui::SameLine();
+			ImGui::Text("Y"); ImGui::SameLine(); ImGui::SetNextItemWidth(50); ImGui::DragFloat("##value5", &f1, 0.1f); ImGui::SameLine();
+			ImGui::Text("Z"); ImGui::SameLine(); ImGui::SetNextItemWidth(50); ImGui::DragFloat("##value6", &f2, 0.1f);
 		}
+		ImGui::Separator();
 		ImGui::End();
 
 		ImGui::End();
