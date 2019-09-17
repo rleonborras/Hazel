@@ -81,14 +81,15 @@ namespace Hazel {
 	ImGuiLayer::~ImGuiLayer()
 	{
 	}
+
 	void ImGuiLayer::UpdateDocking() {
 
 		ImGuiViewport* viewport = ImGui::GetMainViewport();
 		ImGui::SetNextWindowPos(viewport->Pos);
 		ImGui::SetNextWindowSize(viewport->Size);
 		ImGui::SetNextWindowViewport(viewport->ID);
-
 	}
+
 	void ImGuiLayer::OnUpdate()
 	{
 
@@ -116,8 +117,10 @@ namespace Hazel {
 			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 		}
+
 		ImGui::ShowDemoWindow(&show);
 		ImGui::BeginMainMenuBar();
+
 		{
 			if (ImGui::BeginMenu("File")) {
 				ImGui::MenuItem("New Scene");
@@ -159,8 +162,38 @@ namespace Hazel {
 				ImGui::EndMenu();
 			}
 		}
+
 		ImGui::EndMainMenuBar();
-		ImGui::Begin("Window");
+		ImGui::Begin("Hierarchy"); 
+		{
+			if (ImGui::TreeNode("Tree"))
+			{
+				for (int x = 0; x < 3; x++)
+				{
+					bool open1 = ImGui::TreeNode((void*)(intptr_t)x, "Node%d", x);
+
+					if (open1)
+					{
+						for (int y = 0; y < 3; y++)
+						{
+							bool open2 = ImGui::TreeNode((void*)(intptr_t)y, "Node%d.%d", x, y);
+							if (open2)
+							{
+								ImGui::Text("Even more contents");
+								if (ImGui::TreeNode("Tree in column"))
+								{
+									ImGui::TreePop();
+								}
+							}
+							if (open2)
+								ImGui::TreePop();
+						}
+						ImGui::TreePop();
+					}
+				}
+				ImGui::TreePop();
+			}
+		}
 		ImGui::End();
 		//dockspace_flags = ImGuiDockNodeFlags_AutoHideTabBar;
 		ImGui::SetNextWindowSize(ImVec2(500, 400));

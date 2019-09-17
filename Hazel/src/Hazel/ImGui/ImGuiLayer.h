@@ -21,6 +21,7 @@ namespace Hazel {
 		void setDocking();
 		void UpdateDocking();
 		void OnEvent(Event& event);
+		//void ImGuiTransformMenu(GameObject currentObject) {};
 	private:
 		bool OnMouseButtonPressedEvent(MouseButtonPressedEvent& e);
 		bool OnMouseButtonReleasedEvent(MouseButtonReleasedEvent& e);
