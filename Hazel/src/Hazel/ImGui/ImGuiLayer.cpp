@@ -126,9 +126,55 @@ namespace Hazel {
 			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 		}
 
-		ImGui::ShowDemoWindow(&show);
-		ImGui::BeginMainMenuBar();
 
+
+		ImGui::ShowDemoWindow(&show);
+
+		//ImGui::SetNextWindowSize(ImVec2(500, 440), ImGuiCond_FirstUseEver);
+		if (ImGui::Begin("Project", &show, ImGuiWindowFlags_MenuBar))
+		{
+			if (ImGui::BeginMenuBar())
+			{
+				if (ImGui::BeginMenu("Create"))
+				{
+					ImGui::MenuItem("Asset");
+					ImGui::EndMenu();
+				}
+				ImGui::EndMenuBar();
+			}
+
+			// left
+			const char* SceneLabel = "Scenes";
+			static int selected = 0;
+			ImGui::BeginChild("left panel", ImVec2(150, 0), true);
+			if (ImGui::TreeNode("Assets"))
+			{
+				if (ImGui::TreeNode(SceneLabel)) {
+					ImGui::TreePop();
+				}
+				ImGui::TreePop();
+			}
+
+			ImGui::EndChild();
+			ImGui::SameLine();
+
+			// right
+			ImGui::BeginGroup();
+			ImGui::BeginChild("item view", ImVec2(0, -ImGui::GetFrameHeightWithSpacing())); // Leave room for 1 line below us
+			ImGui::Text("MyObject: %d", selected);
+			ImGui::Separator();
+
+			ImGui::TextWrapped("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ");
+
+			ImGui::EndChild();
+
+			ImGui::EndGroup();
+		}
+
+
+		ImGui::End();
+
+		ImGui::BeginMainMenuBar();
 		{
 			if (ImGui::BeginMenu("File")) {
 				ImGui::MenuItem("New Scene");
@@ -205,7 +251,7 @@ namespace Hazel {
 		ImGui::End();
 		//dockspace_flags = ImGuiDockNodeFlags_AutoHideTabBar;
 		ImGui::SetNextWindowSize(ImVec2(500, 400));
-		ImGui::Begin("Inspector", &show, ImGuiDockNodeFlags_AutoHideTabBar | ImGuiWindowFlags_NoTitleBar);
+		ImGui::Begin("Inspector", &show);
 		ImGui::Checkbox(" ", &show); ImGui::SameLine();
 		static char buf1[64] = "Target"; ImGui::InputText("###", buf1, 64, ImGuiInputTextFlags_CharsNoBlank);
 		ImGui::Separator();
@@ -234,11 +280,15 @@ namespace Hazel {
 			static bool drag_and_drop = true;
 			static bool options_menu = true;
 			static bool hdr = false;
+			static int FramePaddingMaterials = 2;
 			static ImVec4 ref_color_v(1.0f, 0.0f, 1.0f, 0.5f);
 
 			static ImVec4 color = ImVec4(114.0f / 255.0f, 144.0f / 255.0f, 154.0f / 255.0f, 255.0f / 255.0f);
-			//static ImVec4 color = ImVec4(20.0f / 255.0f, 20.0f / 255.0f, 20.0f / 255.0f, 20.0f / 255.0f);
-			ImGui::ImageButton(TOTEX my_opengl_texture, ImVec2(60, 60)); ImGui::SameLine();
+
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.392f, 0.369f, 0.376f, 0.10f));
+			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.128f, 0.128f, 0.128f, 0.55f));
+
+			ImGui::ImageButton(TOTEX my_opengl_texture, ImVec2(60, 60), ImVec2(0, 0), ImVec2(1, 1), FramePaddingMaterials); ImGui::SameLine();
 			ImGui::AlignTextToFramePadding();
 			ImGui::Text("\n   Albedo"); ImGui::SameLine();
 			ImGuiColorEditFlags misc_flags = (hdr ? ImGuiColorEditFlags_HDR : 0) | (drag_and_drop ? 0 : ImGuiColorEditFlags_NoDragDrop) | (alpha_half_preview ? ImGuiColorEditFlags_AlphaPreviewHalf : (alpha_preview ? ImGuiColorEditFlags_AlphaPreview : 0)) | (options_menu ? 0 : ImGuiColorEditFlags_NoOptions);
@@ -247,16 +297,24 @@ namespace Hazel {
 			ImGui::ColorEdit4(" \n MyColor##3", (float*)&color, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | misc_flags);
 			ImGui::PopStyleVar();
 
-			ImGui::ImageButton(TOTEX my_opengl_texture, ImVec2(60, 60)); ImGui::SameLine();
+
+			ImGui::ImageButton(NULL, ImVec2(60, 60), ImVec2(0, 0), ImVec2(1, 1), FramePaddingMaterials); ImGui::SameLine();
 			//ImGui::AlignTextToFramePadding();
-			ImGui::Text("\n   Specular");
-			ImGui::ImageButton(TOTEX my_opengl_texture, ImVec2(60, 60)); ImGui::SameLine();
+			ImGui::Text("\n   Specular"); ImGui::SameLine();
+			static float SpecIntensity = 1.0f;
+			//ImGui::DragFloatRange2("range", &begin, &end, 0.25f, 0.0f, 100.0f, "Min: %.1f %%", "Max: %.1f %%");
+			//ImGui::AlignTextToFramePadding();
+			ImGui::PushItemWidth(70); ImGui::SliderFloat("##", &SpecIntensity, 0.0f, 1.0f);
+			
+			ImGui::ImageButton(NULL, ImVec2(60, 60), ImVec2(0, 0), ImVec2(1, 1), FramePaddingMaterials); ImGui::SameLine();
 			//ImGui::AlignTextToFramePadding();
 			ImGui::Text("\n   Metallic"); 
 
-			ImGui::ImageButton(TOTEX my_opengl_texture, ImVec2(60, 60)); ImGui::SameLine();
+			ImGui::ImageButton(TOTEX my_opengl_texture, ImVec2(60, 60), ImVec2(0, 0), ImVec2(1, 1), FramePaddingMaterials); ImGui::SameLine();
 			//ImGui::AlignTextToFramePadding();
-			ImGui::Text("\n   Roughtness"); 
+			ImGui::Text("\n   Roughtness");
+			ImGui::PopStyleColor();
+			ImGui::PopStyleColor();
 			ImGui::Separator();
 		}
 		ImGui::End();

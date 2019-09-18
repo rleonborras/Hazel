@@ -971,9 +971,23 @@ bool ImGui::ImageButton(ImTextureID user_texture_id, const ImVec2& size, const I
     const ImU32 col = GetColorU32((held && hovered) ? ImGuiCol_ButtonActive : hovered ? ImGuiCol_ButtonHovered : ImGuiCol_Button);
     RenderNavHighlight(bb, id);
     RenderFrame(bb.Min, bb.Max, col, true, ImClamp((float)ImMin(padding.x, padding.y), 0.0f, style.FrameRounding));
-    if (bg_col.w > 0.0f)
+    if (bg_col.w > 0.0f) //TODO, add an image checkerboard to use it when no texture
         window->DrawList->AddRectFilled(image_bb.Min, image_bb.Max, GetColorU32(bg_col));
-    window->DrawList->AddImage(user_texture_id, image_bb.Min, image_bb.Max, uv0, uv1, GetColorU32(tint_col));
+    if(user_texture_id!=NULL)
+        window->DrawList->AddImage(user_texture_id, image_bb.Min, image_bb.Max, uv0, uv1, GetColorU32(tint_col));
+    else {
+
+        //ImVec4 col_rgb_without_alpha(col_rgb.x, col_rgb.y, col_rgb.z, 1.0f);
+        float grid_step = ImMin(size.x, size.y) / 2.7f;
+        float rounding = ImMin(g.Style.FrameRounding, grid_step * 0.5f);
+        ImRect bb_inner = bb;
+        float off = -0.75f; // The border (using Col_FrameBg) tends to look off when color is near-opaque and rounding is enabled. This offset seemed like a good middle ground to reduce those artifacts.
+        //bb_inner.Expand(off);
+
+        float mid_x = (float)(int)((bb_inner.Min.x + bb_inner.Max.x) * 0.5f + 0.5f);
+        RenderColorRectWithAlphaCheckerboard(ImVec2(bb_inner.Min.x , bb_inner.Min.y), bb_inner.Max,col, grid_step, ImVec2(-grid_step + off, off), rounding, ImDrawCornerFlags_TopRight | ImDrawCornerFlags_BotRight);
+
+     }
 
     return pressed;
 }
