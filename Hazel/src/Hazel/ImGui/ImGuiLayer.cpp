@@ -1,14 +1,16 @@
+
 #include "hzpch.h"
 
 #include "ImGuiLayer.h"
 #include "Platform/OpenGL/ImGuiOpenGLRenderer.h"
 
 #include "imgui.h"
-
 #include "Hazel/Application.h"
-
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
+
+#define STB_IMAGE_IMPLEMENTATION
+#include <Hazel/stb_image.h>
 
 //#define SRC_DIR "C:/Users/rleon/Documents/Dev/Engine/Hazel"
 
@@ -73,6 +75,12 @@ namespace Hazel {
 
 	static ImGuiDockNodeFlags dockspace_flags;
 	ImGuiWindowFlags window_flags;
+
+	int my_image_width=504, my_image_height=507;
+	unsigned char* my_image_data = stbi_load("../Hazel/src/Textures/Texture_Sample.jpg", &my_image_width, &my_image_height, NULL, 4);
+	GLuint my_opengl_texture;
+
+#define TOTEX (void*)(intptr_t)
 
 	ImGuiLayer::ImGuiLayer() : Layer("ImGuiLayer")
 	{
@@ -219,6 +227,17 @@ namespace Hazel {
 			ImGui::Text("Z"); ImGui::SameLine(); ImGui::SetNextItemWidth(50); ImGui::DragFloat("##value6", &f2, 0.1f);
 		}
 		ImGui::Separator();
+		if (ImGui::CollapsingHeader("Material"))
+		{
+
+			static ImVec4 color = ImVec4(114.0f / 255.0f, 144.0f / 255.0f, 154.0f / 255.0f, 200.0f / 255.0f);
+			ImGui::Image(TOTEX my_opengl_texture, ImVec2(50, 50)); ImGui::SameLine();
+			ImGui::AlignTextToFramePadding();
+			ImGui::Text("\nAlbedo"); ImGui::SameLine();
+			ImGui::ColorEdit4("MyColor##2", (float*)&color, ImGuiColorEditFlags_DisplayHSV);
+			
+
+		}
 		ImGui::End();
 
 		ImGui::End();
@@ -268,6 +287,16 @@ namespace Hazel {
 		setDocking();
 
 		//TEMPORARY
+
+		
+		glGenTextures(1, &my_opengl_texture);
+		glBindTexture(GL_TEXTURE_2D, my_opengl_texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, my_image_width, my_image_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, my_image_data);
+
+
 
 		io.KeyMap[ImGuiKey_Tab] = GLFW_KEY_TAB;
 		io.KeyMap[ImGuiKey_LeftArrow] = GLFW_KEY_LEFT;

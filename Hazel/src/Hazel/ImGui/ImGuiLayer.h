@@ -6,7 +6,6 @@
 #include "Hazel/Events/ApplicationEvent.h"
 
 
-
 namespace Hazel {
 
 	class HAZEL_API ImGuiLayer : public Layer 
@@ -35,7 +34,4 @@ namespace Hazel {
 		float m_Time = 0.0f;
 	
 	};
-
-
-
 }

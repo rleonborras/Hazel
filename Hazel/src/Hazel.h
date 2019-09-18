@@ -8,6 +8,7 @@
 ////---- Log System-----------------
 #include "Hazel/Log.h"
 
+#include "Hazel/stb_image.h"
 //------ImGui Layer--------
 #include "Hazel/ImGui/ImGuiLayer.h"
 
