@@ -229,14 +229,35 @@ namespace Hazel {
 		ImGui::Separator();
 		if (ImGui::CollapsingHeader("Material"))
 		{
+			static bool alpha_preview = true;
+			static bool alpha_half_preview = false;
+			static bool drag_and_drop = true;
+			static bool options_menu = true;
+			static bool hdr = false;
+			static ImVec4 ref_color_v(1.0f, 0.0f, 1.0f, 0.5f);
 
-			static ImVec4 color = ImVec4(114.0f / 255.0f, 144.0f / 255.0f, 154.0f / 255.0f, 200.0f / 255.0f);
-			ImGui::Image(TOTEX my_opengl_texture, ImVec2(50, 50)); ImGui::SameLine();
+			static ImVec4 color = ImVec4(114.0f / 255.0f, 144.0f / 255.0f, 154.0f / 255.0f, 255.0f / 255.0f);
+			//static ImVec4 color = ImVec4(20.0f / 255.0f, 20.0f / 255.0f, 20.0f / 255.0f, 20.0f / 255.0f);
+			ImGui::ImageButton(TOTEX my_opengl_texture, ImVec2(60, 60)); ImGui::SameLine();
 			ImGui::AlignTextToFramePadding();
-			ImGui::Text("\nAlbedo"); ImGui::SameLine();
-			ImGui::ColorEdit4("MyColor##2", (float*)&color, ImGuiColorEditFlags_DisplayHSV);
-			
+			ImGui::Text("\n   Albedo"); ImGui::SameLine();
+			ImGuiColorEditFlags misc_flags = (hdr ? ImGuiColorEditFlags_HDR : 0) | (drag_and_drop ? 0 : ImGuiColorEditFlags_NoDragDrop) | (alpha_half_preview ? ImGuiColorEditFlags_AlphaPreviewHalf : (alpha_preview ? ImGuiColorEditFlags_AlphaPreview : 0)) | (options_menu ? 0 : ImGuiColorEditFlags_NoOptions);
+			ImVec2 FramePadding(100.0f,3.0f);
+			ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, FramePadding); ImGui::SameLine();
+			ImGui::ColorEdit4(" \n MyColor##3", (float*)&color, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | misc_flags);
+			ImGui::PopStyleVar();
 
+			ImGui::ImageButton(TOTEX my_opengl_texture, ImVec2(60, 60)); ImGui::SameLine();
+			//ImGui::AlignTextToFramePadding();
+			ImGui::Text("\n   Specular");
+			ImGui::ImageButton(TOTEX my_opengl_texture, ImVec2(60, 60)); ImGui::SameLine();
+			//ImGui::AlignTextToFramePadding();
+			ImGui::Text("\n   Metallic"); 
+
+			ImGui::ImageButton(TOTEX my_opengl_texture, ImVec2(60, 60)); ImGui::SameLine();
+			//ImGui::AlignTextToFramePadding();
+			ImGui::Text("\n   Roughtness"); 
+			ImGui::Separator();
 		}
 		ImGui::End();
 
