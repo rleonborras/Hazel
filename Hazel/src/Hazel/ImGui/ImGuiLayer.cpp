@@ -4,7 +4,9 @@
 #include "ImGuiLayer.h"
 #include "Platform/OpenGL/ImGuiOpenGLRenderer.h"
 
+#include "imnodes.h"
 #include "imgui.h"
+
 #include "Hazel/Application.h"
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
@@ -82,6 +84,8 @@ namespace Hazel {
 
 #define TOTEX (void*)(intptr_t)
 
+inline int make_id(int node, int attribute) { return (node << 16) | attribute; }
+
 	ImGuiLayer::ImGuiLayer() : Layer("ImGuiLayer")
 	{
 	}
@@ -96,6 +100,10 @@ namespace Hazel {
 		ImGui::SetNextWindowPos(viewport->Pos);
 		ImGui::SetNextWindowSize(viewport->Size);
 		ImGui::SetNextWindowViewport(viewport->ID);
+	}
+
+	void InitializeNodeEditor() {
+
 	}
 
 	void ImGuiLayer::OnUpdate()
@@ -170,7 +178,7 @@ namespace Hazel {
 
 			ImGui::EndGroup();
 		}
-
+		static bool showNodeEditor = false;
 
 		ImGui::End();
 
@@ -200,7 +208,9 @@ namespace Hazel {
 				ImGui::EndMenu();
 			}
 			if (ImGui::BeginMenu("View")) {
-				ImGui::MenuItem("New");
+				if (ImGui::MenuItem("NodeEditor")) {
+					showNodeEditor = true;
+				}
 				ImGui::EndMenu();
 			}
 			if (ImGui::BeginMenu("Debug")) {
@@ -288,7 +298,7 @@ namespace Hazel {
 			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.392f, 0.369f, 0.376f, 0.10f));
 			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.128f, 0.128f, 0.128f, 0.55f));
 
-			ImGui::ImageButton(TOTEX my_opengl_texture, ImVec2(60, 60), ImVec2(0, 0), ImVec2(1, 1), FramePaddingMaterials); ImGui::SameLine();
+			ImGui::ImageButton(NULL, ImVec2(60, 60), ImVec2(0, 0), ImVec2(1, 1), FramePaddingMaterials); ImGui::SameLine();
 			ImGui::AlignTextToFramePadding();
 			ImGui::Text("\n   Albedo"); ImGui::SameLine();
 			ImGuiColorEditFlags misc_flags = (hdr ? ImGuiColorEditFlags_HDR : 0) | (drag_and_drop ? 0 : ImGuiColorEditFlags_NoDragDrop) | (alpha_half_preview ? ImGuiColorEditFlags_AlphaPreviewHalf : (alpha_preview ? ImGuiColorEditFlags_AlphaPreview : 0)) | (options_menu ? 0 : ImGuiColorEditFlags_NoOptions);
@@ -306,18 +316,171 @@ namespace Hazel {
 			//ImGui::AlignTextToFramePadding();
 			ImGui::PushItemWidth(70); ImGui::SliderFloat("##", &SpecIntensity, 0.0f, 1.0f);
 			
+			if (ImGui::ImageButton(TOTEX my_opengl_texture, ImVec2(60, 60), ImVec2(0, 0), ImVec2(1, 1), FramePaddingMaterials)) {
+					ImGui::OpenPopup("Context");
+					//ImGui::AlignTextToFramePadding();
+			}
+			ImGui::SameLine();
+			ImGui::Text("\n   Metallic");
+
 			ImGui::ImageButton(NULL, ImVec2(60, 60), ImVec2(0, 0), ImVec2(1, 1), FramePaddingMaterials); ImGui::SameLine();
 			//ImGui::AlignTextToFramePadding();
-			ImGui::Text("\n   Metallic"); 
-
-			ImGui::ImageButton(TOTEX my_opengl_texture, ImVec2(60, 60), ImVec2(0, 0), ImVec2(1, 1), FramePaddingMaterials); ImGui::SameLine();
-			//ImGui::AlignTextToFramePadding();
 			ImGui::Text("\n   Roughtness");
+			if (ImGui::Button("Hello")) {
+				ImGui::OpenPopup("Context");
+			}
+
 			ImGui::PopStyleColor();
 			ImGui::PopStyleColor();
 			ImGui::Separator();
 		}
 		ImGui::End();
+
+		if (showNodeEditor) {
+			ImGui::PushStyleColor(ImGuiCol_TitleBg|ImGuiCol_TitleBgActive,ImVec4(0.0f,0.0f,0.0f,1.0f));
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize,2);
+			ImGui::Begin("Node Editor",&showNodeEditor);
+			const int hardcoded_node_id = 1;
+			imnodes::BeginNodeEditor(); 
+			{
+		
+
+			/*	imnodes::SetNodeName(hardcoded_node_id, "output node");
+				imnodes::BeginNode(hardcoded_node_id);
+				const int output_attr_id = 2;
+				imnodes::BeginOutputAttribute(output_attr_id);
+				ImGui::Indent(40);
+				ImGui::Text("output pin");
+				imnodes::EndAttribute();
+				imnodes::EndNode(); 
+
+				imnodes::SetNodeName(2, "input node");
+				imnodes::BeginNode(2);
+				imnodes::BeginInputAttribute(3);
+				ImGui::Text("Input pin");
+				imnodes::EndAttribute();
+				imnodes::EndNode();*/
+
+				for (auto& elem : float_nodes_)
+				{
+					const float node_width = 150.0f;
+					imnodes::BeginNode(elem.first);
+
+					imnodes::BeginInputAttribute(make_id(elem.first, 0));
+					ImGui::Text("input");
+					imnodes::EndAttribute();
+					ImGui::Spacing();
+					{
+						const float label_width = ImGui::CalcTextSize("number").x;
+						ImGui::Text("number");
+						ImGui::PushItemWidth(node_width - label_width - 6.0f);
+						ImGui::SameLine();
+						ImGui::DragFloat("##hidelabel", &elem.second, 0.01f);
+						ImGui::PopItemWidth();
+					}
+					ImGui::Spacing();
+					{
+						imnodes::BeginOutputAttribute(make_id(elem.first, 1));
+						const float label_width = ImGui::CalcTextSize("output").x;
+						ImGui::Indent(node_width - label_width - 1.5f);
+						ImGui::Text("output");
+						imnodes::EndAttribute();
+					}
+
+					imnodes::EndNode();
+				}
+
+				for (auto& elem : color_nodes_)
+				{
+					const float node_width = 200.0f;
+					imnodes::BeginNode(elem.first);
+
+					imnodes::BeginInputAttribute(make_id(elem.first, 0));
+					ImGui::Text("input");
+					imnodes::EndAttribute();
+					ImGui::Spacing();
+
+					{
+						imnodes::BeginOutputAttribute(make_id(elem.first, 1));
+						const float label_width = ImGui::CalcTextSize("color").x;
+						ImGui::PushItemWidth(node_width - label_width - 6.0f);
+						ImGui::ColorEdit3("color", elem.second.data);
+						ImGui::PopItemWidth();
+						imnodes::EndAttribute();
+					}
+					ImGui::Spacing();
+					{
+						imnodes::BeginOutputAttribute(make_id(elem.first, 2));
+						const float label_width = ImGui::CalcTextSize("output").x;
+						ImGui::Indent(node_width - label_width - 1.5f);
+						ImGui::Text("output");
+						imnodes::EndAttribute();
+					}
+
+					imnodes::EndNode();
+				}
+
+				if (!ImGui::IsAnyItemHovered() && ImGui::IsMouseClicked(1)&&ImGui::IsWindowHovered())
+				{
+					ImGui::OpenPopup("context menu");
+				}
+
+				if (ImGui::BeginPopup("context menu"))
+				{
+					int new_node = -1;
+					ImVec2 click_pos = ImGui::GetMousePosOnOpeningCurrentPopup();
+
+					if (ImGui::MenuItem("drag float node"))
+					{
+						new_node = current_id_++;
+						float_nodes_.insert(std::make_pair(new_node, 0.f));
+						imnodes::SetNodeName(new_node, "drag float");
+					}
+
+					if (ImGui::MenuItem("color node"))
+					{
+						new_node = current_id_++;
+						color_nodes_.insert(std::make_pair(new_node, Color3{}));
+						imnodes::SetNodeName(new_node, "color");
+					}
+
+					ImGui::EndPopup();
+
+					if (new_node != -1)
+					{
+						imnodes::SetNodePos(new_node, click_pos);
+					}
+				}
+
+				for (const auto linkpair : links_)
+				{
+					imnodes::Link(
+						linkpair.first, linkpair.second.start, linkpair.second.end);
+				}
+
+			}
+			imnodes::EndNodeEditor();
+
+			int link_start, link_end;
+			if (imnodes::IsLinkCreated(&link_start, &link_end))
+			{
+				links_.insert(
+					std::make_pair(current_id_++, Link{ link_start, link_end }));
+			}
+
+			int link_id;
+			if (imnodes::IsLinkSelected(&link_id))
+			{
+				//if (ImGui::IsKeyReleased(SDL_SCANCODE_X))
+				//{
+				links_.erase(link_id);
+				//}
+			}
+			ImGui::End();
+			ImGui::PopStyleColor();
+			ImGui::PopStyleVar();
+
+		}
 
 		ImGui::End();
 
@@ -351,8 +514,11 @@ namespace Hazel {
 
 	void ImGuiLayer::OnAttach()
 	{
+		
 		ImGui::CreateContext();
 		ImGui::StyleColorsCustom();
+		imnodes::Initialize();
+		current_id_ = 0;
 		//ImGui::StyleColorsDark();
 
 		ImGuiIO& io = ImGui::GetIO();
@@ -367,7 +533,6 @@ namespace Hazel {
 
 		//TEMPORARY
 
-		
 		glGenTextures(1, &my_opengl_texture);
 		glBindTexture(GL_TEXTURE_2D, my_opengl_texture);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
